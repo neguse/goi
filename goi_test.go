@@ -81,3 +81,67 @@ func TestEncode(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkDecodePng(b *testing.B) {
+	data, err := os.ReadFile("goi.png")
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := png.Decode(bytes.NewReader(data)); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkDecodeQoi(b *testing.B) {
+	data, err := os.ReadFile("goi.qoi")
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := Decode(bytes.NewReader(data)); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkEncodePng(b *testing.B) {
+	data, err := os.ReadFile("goi.png")
+	if err != nil {
+		b.Fatal(err)
+	}
+	m, err := png.Decode(bytes.NewReader(data))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if png.Encode(bytes.NewBuffer(nil), m); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkEncodeQoi(b *testing.B) {
+	data, err := os.ReadFile("goi.png")
+	if err != nil {
+		b.Fatal(err)
+	}
+	m, err := png.Decode(bytes.NewReader(data))
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if Encode(bytes.NewBuffer(nil), m); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
