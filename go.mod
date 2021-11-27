@@ -1,3 +1,3 @@
-module github.com/goi
+module github.com/neguse/goi
 
 go 1.17
